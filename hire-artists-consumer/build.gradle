@@ -8,7 +8,7 @@ buildscript {
 }
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
+//apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
 
@@ -26,7 +26,17 @@ dependencies {
     //compile('javax.servlet:javax.servlet-api:3.0.1')
     compile('org.apache.kafka:kafka_2.10:0.8.2.2')
     testCompile("junit:junit")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
 }
+
+//sourceSets {
+//    test {
+//        java {
+//            srcDirs = ["com/hireartists"]
+//            include "**/*Test.java"
+//        }
+//    }
+//}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'

@@ -1,13 +1,17 @@
 package com.hireartists.services;
 
+import com.hireartists.domains.Artist;
+import com.hireartists.repository.ArtistRepository;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
-import kafka.utils.Json;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
+
 import kafka.javaapi.producer.Producer;
-import kafka.javaapi.message.ByteBufferMessageSet;
-import kafka.message.Message;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,10 +22,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class ArtistProducerService {
 
+    @Autowired
+    public ArtistRepository artistRepository;
     private Producer<String, String> producer;
     private final String topic = "artists-topic";
 
     public ArtistProducerService(){
+        artistRepository = new ArtistRepository();
         ProducerConfig config = new ProducerConfig(new Properties(){{
                 put("serializer.class", "kafka.serializer.StringEncoder");
                 put("zk.connect", "127.0.0.1:2181");
@@ -34,5 +41,35 @@ public class ArtistProducerService {
         //send a message
         KeyedMessage<String, String> kafkaMessage = new KeyedMessage<String, String>(topic,message.toString());
         producer.send(kafkaMessage);
+    }
+
+    public List<Artist> search(String criteria){
+        List<Artist> artists = artistRepository.findAll();
+        return artists.stream()
+                .filter(artist -> artist.getName().startsWith(criteria))
+                .collect(Collectors.toList());
+    }
+
+    public List<Json> convertToJson(String criteria){
+        List<Artist> artists = artistRepository.findAll();
+        return artists.stream()
+                .map(artist -> new Json("name", artist.getName()))
+                .collect(Collectors.toList());
+    }
+
+    public Map<String, List<Artist>> groupListByType(String criteria){
+        List<Artist> artists = artistRepository.findAll();
+        return artists.stream()
+                .collect(Collectors.groupingBy(artist -> artist.getType()));
+    }
+
+    private class Json {
+        private String key;
+        private String value;
+
+        public Json(String key, String value){
+            this.key = key;
+            this.value = value;
+        }
     }
 }
