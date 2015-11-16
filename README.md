@@ -1,9 +1,12 @@
 
 
+```
 producer 1                       consumer 1 
 producer 2   ->   {Events}    <- consumer 2
 ...                             ...
 producer n                       consumer n
+
+```
 
 References
 --------------
