@@ -1,5 +1,8 @@
 package com.hireartists.domains;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by prayagupd
  * on 11/11/15.
@@ -8,6 +11,7 @@ package com.hireartists.domains;
 public class Artist {
     private String name;
     private String type;
+    private List<Concert> concerts = new ArrayList<>();
 
     public Artist(String name, String type) {
         this.name = name;
@@ -28,5 +32,13 @@ public class Artist {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public List<Concert> getConcerts() {
+        return concerts;
+    }
+
+    public void setConcerts(List<Concert> concerts) {
+        this.concerts = concerts;
     }
 }

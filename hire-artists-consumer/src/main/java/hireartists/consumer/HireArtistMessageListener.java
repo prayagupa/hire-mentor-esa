@@ -1,13 +1,14 @@
-package hireartists.controller.hireartists.services;
+package hireartists.consumer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,23 +17,28 @@ import java.util.Properties;
 
 /**
  * Created by prayagupd
- * on 10/31/15.
+ * on 11/16/15.
  */
 
-@Service
-public class ArtistsConsumeService {
-
-    private Logger logger = LoggerFactory.getLogger(ArtistsConsumeService.class);
+@Component
+@Scope("prototype")
+public class HireArtistMessageListener extends Thread {
+    private Logger logger = LoggerFactory.getLogger(HireArtistMessageListener.class);
 
     private ConsumerConnector consumerConnector;
     private final String TOPIC = "artists-topic";
+    
+    public HireArtistMessageListener(){
 
-    public ArtistsConsumeService(){
         Properties properties = new Properties(){{
             put("zookeeper.connect","localhost:2181");
-            put("group.id","artists-test-group");
+            put("group.id","artists-hired-group");
         }};
         consumerConnector = Consumer.createJavaConsumerConnector(new ConsumerConfig(properties));
+    }
+    @Override
+    public void run() {
+        consume();
     }
 
     public void consume(){
@@ -45,10 +51,11 @@ public class ArtistsConsumeService {
             put(TOPIC, new Integer(1));
         }};
         Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumerConnector.createMessageStreams(topicCountMap);
+        logger.info("getting topic stream from {}", TOPIC);
         KafkaStream<byte[], byte[]> topicStream =  consumerMap.get(TOPIC).get(0);
         ConsumerIterator<byte[], byte[]> it = topicStream.iterator();
-        while(it.hasNext())
+        while(it.hasNext()) {
             logger.info(new String(it.next().message()));
+        }
     }
-
 }
