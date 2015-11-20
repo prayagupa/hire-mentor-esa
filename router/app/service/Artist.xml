@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Artists>
+    <Artist id="1">
+        <name>Porcupine Tree</name>
+        <type>Band</type>
+        <members>29</members>
+        <address>US</address>
+    </Artist>
+    <Albums>
+        <album>FOBP</album>
+        <album>Signify</album>
+    </Albums>
+    <Artist id="2">
+        <members>35</members>
+        <name>Steven Wilson</name>
+        <type>Solo</type>
+        <address>UK</address>
+    </Artist>
+    <Artist id="3">
+        <members>40</members>
+        <name>Worthwile</name>
+        <type>Band</type>
+        <address>USA</address>
+    </Artist>
+    <Artist id="4">
+        <members>25</members>
+        <name>Prayag</name>
+        <type>Solo</type>
+        <address>USA</address>
+    </Artist>
+</Artists>
