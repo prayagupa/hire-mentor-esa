@@ -1,6 +1,0 @@
-Notification Engine
-----------------------
-
-```
-./gradlew bootRun
-```
