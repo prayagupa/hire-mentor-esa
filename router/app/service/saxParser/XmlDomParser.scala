@@ -1,8 +1,8 @@
-package service
+package service.saxParser
 
 import java.io.File
-import javax.xml.bind.{Marshaller, Unmarshaller, JAXBContext}
-import javax.xml.bind.annotation.{XmlElementWrapper, XmlRootElement, XmlAccessType, XmlElement, XmlAccessorType}
+import javax.xml.bind.annotation.{XmlAccessType, XmlAccessorType, XmlElement, XmlRootElement}
+import javax.xml.bind.{JAXBContext, Marshaller, Unmarshaller}
 
 import scala.collection.mutable.ListBuffer
 
@@ -15,14 +15,14 @@ import scala.collection.mutable.ListBuffer
 @XmlRootElement(name = "Artists")
 @XmlAccessorType(XmlAccessType.FIELD)
 class Artists {
-  @XmlElementWrapper(name="Artists")
+
   @XmlElement(name = "Artist")
-  var artists : ListBuffer[Artist_] = new ListBuffer[Artist_]()
+  var artists : ListBuffer[Artist] = new ListBuffer[Artist]()
 }
 
 @XmlRootElement(name="Artist")
 @XmlAccessorType(XmlAccessType.FIELD)
-class Artist_ {
+class Artist {
 
   @XmlElement(name="name")
   var name : String = ""
@@ -36,23 +36,23 @@ class Artist_ {
   @XmlElement(name="type")
   var artistType : String = ""
 
-  @XmlElementWrapper(name="Album")
-  @XmlElement(name = "album")
-  var album : ListBuffer[String] = new ListBuffer[String]()
+//  @XmlElementWrapper(name="Album")
+//  @XmlElement(name = "album")
+//  var album : ListBuffer[String] = new ListBuffer[String]()
 
 }
 
-@XmlRootElement(name="Album")
-@XmlAccessorType(XmlAccessType.FIELD)
-class Album {
-
-  @XmlElement(name="name")
-  var name : String = ""
-
-//  @XmlElement(name="artists")
-//  var artists : ListBuffer[Artist_] = new ListBuffer[Artist_]()
-
-}
+//@XmlRootElement(name="Album")
+//@XmlAccessorType(XmlAccessType.FIELD)
+//class Album {
+//
+//  @XmlElement(name="name")
+//  var name : String = ""
+//
+////  @XmlElement(name="artists")
+////  var artists : ListBuffer[Artist_] = new ListBuffer[Artist_]()
+//
+//}
 
 object XmlDomParser {
   def main(args: Array[String]) {
