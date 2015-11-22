@@ -2,3 +2,8 @@ Router
 =================================
 
 routes requests to multiple Topic streams
+
+
+```
+activator run
+```

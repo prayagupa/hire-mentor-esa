@@ -1,17 +1,36 @@
 <users>
     <header>
-        <source>Manhattan</source>
+        <source>
+            <action>Outbound</action>
+            <messageType>ad_users</messageType>
+        </source>
+        <destination>
+            <vendorId>1234</vendorId>
+        </destination>
     </header>
-    <userStart id="111">
+
+    <userHeader id="111">
         <firstName>Ryan</firstName>
-        <lastName>Newman</lastName>
+        <lastName>Newmoon</lastName>
         <location>Columbus</location>
-    </userStart>
+    </userHeader>
+    <game>
+        <name>Clash of titans</name>
+    </game>
+    <game>
+        <name>Angry bird</name>
+    </game>
     <userEnd>1234</userEnd>
-    <userStart id="222">
+    <userHeader id="222">
         <firstName>Prayag</firstName>
         <lastName>Upd</lastName>
         <location>Columbus</location>
-    </userStart>
+    </userHeader>
+    <game>
+        <name>Clash of titans</name>
+    </game>
+    <game>
+        <name>Angry bird</name>
+    </game>
     <userEnd>4321</userEnd>
 </users>
