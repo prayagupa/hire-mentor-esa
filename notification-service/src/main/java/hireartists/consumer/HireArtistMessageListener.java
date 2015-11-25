@@ -26,13 +26,13 @@ public class HireArtistMessageListener extends Thread {
     private Logger logger = LoggerFactory.getLogger(HireArtistMessageListener.class);
 
     private ConsumerConnector consumerConnector;
-    private final String TOPIC = "artists-topic";
+    private final String TOPIC = "topic_artists";
     
     public HireArtistMessageListener(){
 
         Properties properties = new Properties(){{
             put("zookeeper.connect","localhost:2181");
-            put("group.id","artists-hired-group");
+            put("group.id","group_artists");
         }};
         consumerConnector = Consumer.createJavaConsumerConnector(new ConsumerConfig(properties));
     }

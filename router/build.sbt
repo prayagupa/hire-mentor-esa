@@ -13,7 +13,9 @@ libraryDependencies ++= Seq(
   specs2 % Test,
   "com.cloudphysics" % "jerkson_2.10" % "0.6.3",
   "net.liftweb" %% "lift-json" % "2.6.2",
-  "org.apache.kafka" % "kafka_2.10" % "0.8.1.1"
+  "com.fasterxml.jackson.core" % "jackson-databind" % "2.0.2", //just for fucking java
+//  "com.fasterxml.jackson.module" % "jackson-module-scala" % "2.0.2",
+  "org.apache.kafka" % "kafka_2.11" % "0.8.2.2"
     exclude("javax.jms", "jms")
     exclude("com.sun.jdmk", "jmxtools")
     exclude("com.sun.jmx", "jmxri")

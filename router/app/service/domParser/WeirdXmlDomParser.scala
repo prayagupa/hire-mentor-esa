@@ -12,47 +12,57 @@ import org.w3c.dom.{Document, Element, Node, NodeList}
  */
 
 trait Parser {
-  def parse(fileName : String) : AdUserMessage
+  def parse(fileName : String) : OrderMessage
 }
 
-class AdUserMessage {
-  var header : scala.collection.mutable.Map[String, String] = scala.collection.mutable.Map[String, String]().empty
-  var users : util.List[MobileAdUser] = new util.ArrayList[MobileAdUser]()
+class OrderMessage {
+  var header : mutable.Map[String, String] = mutable.Map[String, String]().empty
+  var orders : util.List[Order] = new util.ArrayList[Order]()
+}
+
+class Order {
+  var header : mutable.Map[String, String] = mutable.Map[String, String]().empty
+  var lineItems : util.List[mutable.Map[String, String]] = new util.ArrayList[mutable.Map[String, String]]()
 }
 
 class WeirdXmlDomParser extends Parser {
 
   @throws(classOf[Exception])
-  def parse(filename: String): AdUserMessage = {
+  def parse(filename: String): OrderMessage = {
     val document: Document = getDocumentBuilder.parse(filename)
-    val adMessage = new AdUserMessage
-    val users: util.List[MobileAdUser] = new util.ArrayList[MobileAdUser]
+    val users: util.List[mutable.Map[String, String]] = new util.ArrayList[mutable.Map[String, String]]
     val nodeList: NodeList = document.getDocumentElement.getChildNodes
 
-    var user: MobileAdUser = null
+    val orderMessage = new OrderMessage
+    var orderHeader: mutable.Map[String, String] = new mutable.HashMap[String, String]()
+    var order = new Order
+
     for(i <- 0 until nodeList.getLength) {
-          val firstLevelNode: Node = nodeList.item(i)
+      val firstLevelNode: Node = nodeList.item(i)
           if (firstLevelNode.isInstanceOf[Element]) {
 
-            if ((firstLevelNode.asInstanceOf[Element]).getTagName == "header") {
-              adMessage.header = buildAdHeader(firstLevelNode.asInstanceOf[Element])
-            } else if ((firstLevelNode.asInstanceOf[Element]).getTagName == "userHeader") {
-              user = buildMobileAdUser(firstLevelNode)
-            } else if(firstLevelNode.asInstanceOf[Element].getTagName == "game"){
+            if ((firstLevelNode.asInstanceOf[Element]).getTagName == "HEADER") {
+              orderMessage.header = buildAdHeader(firstLevelNode.asInstanceOf[Element])
+            } else if ((firstLevelNode.asInstanceOf[Element]).getTagName == "ORDERHEADER") {
+              order.header = buildMobileAdUser(firstLevelNode)
+              orderHeader = mutable.Map[String, String]().empty
+            } else if(firstLevelNode.asInstanceOf[Element].getTagName == "LINEITEMMSG"){
                 val secondLevelChildNodes = firstLevelNode.asInstanceOf[Element].getChildNodes
-                for (i <- 0 until secondLevelChildNodes.getLength) {
+
+              var lineItems: mutable.Map[String, String] = mutable.Map[String, String]()
+              for (i <- 0 until secondLevelChildNodes.getLength) {
                   if (secondLevelChildNodes.item(i).isInstanceOf[Element]) {
-                    user.games += secondLevelChildNodes.item(i).asInstanceOf[Element].getTextContent.trim
+                    lineItems.put(secondLevelChildNodes.item(i).getNodeName, secondLevelChildNodes.item(i).asInstanceOf[Element].getTextContent.trim)
                   }
                 }
-            } else if ((firstLevelNode.asInstanceOf[Element]).getTagName == "userEnd") {
-              users.add(user)
-              user = null
+              order.lineItems.add(lineItems)
+            } else if ((firstLevelNode.asInstanceOf[Element]).getTagName == "ORDEREND") {
+              orderMessage.orders.add(order)
+              order = new Order
             }
           }
       }
-    adMessage.users = users
-    adMessage
+    orderMessage
   }
 
   @throws(classOf[ParserConfigurationException])
@@ -83,26 +93,22 @@ class WeirdXmlDomParser extends Parser {
     map
   }
 
-  private def buildMobileAdUser(node: Node): MobileAdUser = {
-    val user: MobileAdUser = new MobileAdUser
-    user.id = node.getAttributes.getNamedItem("id").getNodeValue
+  private def buildMobileAdUser(node: Node): mutable.Map[String, String] = {
+//    user.id = node.getAttributes.getNamedItem("id").getNodeValue
     val childNodes: NodeList = node.getChildNodes
 
-    for (i <- 0 until(childNodes.getLength)) {
-          val childNode: Node = childNodes.item(i)
-          if (childNode.isInstanceOf[Element]) {
-            val content: String = childNode.getLastChild.getTextContent.trim
-            childNode.getNodeName match {
-              case "firstName" =>
-                user.firstName = content
-              case "lastName" =>
-                user.lastName = content
-              case "location" =>
-                user.location = content
+      val prop : mutable.Map[String, String] = mutable.Map[String, String]().empty
+      for (i <- 0 until(childNodes.getLength)) {
+      val childNode: Node = childNodes.item(i)
+        if (childNode.isInstanceOf[Element]) {
+            var content: String = childNode.getTextContent
+            if(content ==null) {
+              content = ""
             }
+            prop.put(childNode.getNodeName,content.trim)
           }
     }
-    user
+    prop
   }
 }
 

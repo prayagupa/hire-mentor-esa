@@ -1,13 +1,18 @@
 package controllers
 
+import java.util.Date
+
 import play.api.libs.json.JsNull
 import play.api.libs.json.Json
 import play.api.libs.json.Json.toJson
 import play.api.mvc._
+import service.TopicService
 
 class RoutingController extends Controller {
 
 //  implicit val jsonWrites = Json.writes[Map[String, Seq[Map[String, String]]]]
+
+  val topicService : TopicService = new TopicService()
 
   def index = Action {
     val ryan = toJson(
@@ -32,7 +37,7 @@ class RoutingController extends Controller {
     Ok(ryan)
   }
 
-  def on = Action {
+  def send = Action { request =>
     val jsonObject = toJson(
       Map(
         "users" -> Seq(
@@ -53,6 +58,7 @@ class RoutingController extends Controller {
         )
       )
     )
+    topicService.sendMessageToTopic(request.queryString.getOrElse("name", new Date().getSeconds).toString, "topic_artists")
     Ok(jsonObject)
   }
 }
