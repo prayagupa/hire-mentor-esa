@@ -6,10 +6,14 @@ package service;
  */
 
 import com.mongodb.*;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CreateCollectionOptions;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 
 // Java
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.HashSet;
@@ -23,7 +27,7 @@ public final class EventStream {
     public static final int SIZE_IN_BYTES = 20 * 971 * 520;
     public static final int MAX_DOCUMENTS = 1000;
     public static final int NO_DOCUMENTS = MAX_DOCUMENTS;
-    public static final String timestampIndex = "timestampIndex";
+    public static final String TIMESTAMP_FIELD = "timestampIndex";
     public static final String MESSAGE_TYPE = "messageType";
     public static final String MESSAGE = "message";
 
@@ -31,7 +35,7 @@ public final class EventStream {
         final MongoClient mongo = new MongoClient(new MongoClientURI("mongodb://127.0.0.1:27017"));
 
         mongo.dropDatabase(EVENTS_DB);
-        mongo.getDatabase(EVENTS_DB).createCollection(EVENTS_STREAM,
+        eventDatabase(mongo).createCollection(EVENTS_STREAM,
                 new CreateCollectionOptions().capped(true).sizeInBytes(SIZE_IN_BYTES).maxDocuments(MAX_DOCUMENTS));
 
         final AtomicBoolean consumerThreadStatus = new AtomicBoolean(true);
@@ -67,6 +71,10 @@ public final class EventStream {
         System.out.println("----- consumer offset: " + consumerCounter.get());
     }
 
+    private static MongoDatabase eventDatabase(MongoClient mongo) {
+        return mongo.getDatabase(EVENTS_DB);
+    }
+
     /**
      * The thread that is reading from the capped collection.
      */
@@ -86,6 +94,7 @@ public final class EventStream {
         public void run() {
             final HashSet<ObjectId> readIds = new HashSet<ObjectId>();
             long lastTimestamp = 0;
+            String lastId = "";
 
             while (RUNNING.get()) {
                 try {
@@ -96,9 +105,10 @@ public final class EventStream {
                         while (tailableCursor.hasNext() && RUNNING.get()) {
                             final BasicDBObject doc = (BasicDBObject) tailableCursor.next();
                             final ObjectId docId = doc.getObjectId("_id");
-                            lastTimestamp = doc.getLong(timestampIndex);
+                            lastTimestamp = doc.getLong(TIMESTAMP_FIELD);
+                            lastId = doc.getString("_id");
 
-                            System.out.println("#0 (for doc id " + docId + ") -> " + COUNTER.get() + " -> " + lastTimestamp);
+                            System.out.println("#0 (for doc id " + docId + ") -> " + COUNTER.get() + " -> " + lastId);
                             if (readIds.contains(docId)) {
                                 System.out.println("------ duplicate id found: " + docId);
                             }
@@ -129,46 +139,80 @@ public final class EventStream {
             }
         }
 
-        private DBCursor createTailableCursor(final long lastTime) {
+        private DBCursor createTailableCursor(final long lastId) {
             final DBCollection collection = MONGO.getDB(EVENTS_DB).getCollection(EVENTS_STREAM);
 
-            if (lastTime == 0) {
+            if (lastId == 0) {
                 return collection.find().sort(new BasicDBObject("$natural", 1))
                         .addOption(Bytes.QUERYOPTION_TAILABLE).addOption(Bytes.QUERYOPTION_AWAITDATA);
             }
-            final BasicDBObject query = new BasicDBObject(timestampIndex, new BasicDBObject("$gt", lastTime));
+            final BasicDBObject query = new BasicDBObject(TIMESTAMP_FIELD, new BasicDBObject("$gt", lastId));
             return collection.find(query).sort(new BasicDBObject("$natural", 1))
                     .addOption(Bytes.QUERYOPTION_TAILABLE).addOption(Bytes.QUERYOPTION_AWAITDATA);
         }
     }
 
     /**
-     * db.EventsStream.insert({timestampIndex: NumberLong(1448430930244), message: NumberLong(229012), messageType: "download"})
+     * db.EventsStream.insert({TIMESTAMP_FIELD: NumberLong(1448430930244), message: NumberLong(229012), messageType: "download"})
      * The thread that is writing to the capped collection.
      */
     private static class EventProducer implements Runnable {
+        private final MongoClient MONGO;
+        private final AtomicBoolean RUNNING;
+        private final AtomicLong COUNTER;
+
+        private EventProducer(final MongoClient mongoClient, final AtomicBoolean running, final AtomicLong counter) {
+            MONGO = mongoClient;
+            RUNNING = running;
+            COUNTER = counter;
+        }
+
         @Override
         public void run() {
             while (RUNNING.get()) {
                 final ObjectId docId = ObjectId.get();
                 final BasicDBObject doc = new BasicDBObject("_id", docId);
                 final long count = COUNTER.incrementAndGet();
-                doc.put(timestampIndex, System.currentTimeMillis());
+                doc.put(TIMESTAMP_FIELD, System.currentTimeMillis());
                 doc.put(MESSAGE_TYPE, "download");
                 doc.put(MESSAGE, count);
                 MONGO.getDB(EVENTS_DB).getCollection(EVENTS_STREAM).insert(doc);
             }
         }
+    }
 
-        private EventProducer(final MongoClient pMongo, final AtomicBoolean pRunning, final AtomicLong pCounter) {
-            MONGO = pMongo;
-            RUNNING = pRunning;
-            COUNTER = pCounter;
-        }
+    public boolean bulkInsertVersion2(MongoClient mongo) {
+        //1
+        final DBObject doc = new BasicDBObject();
+        doc.put(TIMESTAMP_FIELD, System.currentTimeMillis());
+        doc.put(MESSAGE_TYPE, "download");
+        doc.put(MESSAGE, 12);
 
-        private final MongoClient MONGO;
-        private final AtomicBoolean RUNNING;
-        private final AtomicLong COUNTER;
+        DBCollection collection = mongo.getDB(EVENTS_DB).getCollection(EVENTS_STREAM);
+        BulkWriteOperation bulk = collection.initializeOrderedBulkOperation();
+        bulk.insert(doc);
+
+        BulkWriteResult result = bulk.execute();
+        return result.isAcknowledged();
+    }
+
+    public void bulkInsertVersion3(MongoClient mongo) {
+
+        //1
+        final Document doc = new Document();
+        doc.put(TIMESTAMP_FIELD, System.currentTimeMillis());
+        doc.put(MESSAGE_TYPE, "download");
+        doc.put(MESSAGE, 12);
+
+        List<Document> dbObjects = new ArrayList<Document>() {{
+           add(doc);
+        }};
+        MongoCollection<Document> collection_ = eventCollection(mongo);
+        collection_.insertMany(dbObjects);
+    }
+
+    private MongoCollection<Document> eventCollection(MongoClient mongo) {
+        return eventDatabase(mongo).getCollection(EVENTS_STREAM);
     }
 }
 
