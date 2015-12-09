@@ -23,14 +23,14 @@ public abstract class KafkaMessageListener  extends Thread {
     private Logger logger = LoggerFactory.getLogger(KafkaMessageListener.class);
 
     protected String ARTISTS_GROUP = "artists_group";
-    public static final String ZOOK_2181 = "localhost:2181";
+    public static final String DEFAULT_ZOOK_2181 = "192.168.86.5:2181";
     protected String TOPIC = "topic_artists";
 
     private ConsumerConnector consumerConnector;
 
     KafkaMessageListener(){
         Properties properties = new Properties(){{
-            put("zookeeper.connect", ZOOK_2181);
+            put("zookeeper.connect", DEFAULT_ZOOK_2181);
             put("group.id", ARTISTS_GROUP);
         }};
         consumerConnector = Consumer.createJavaConsumerConnector(new ConsumerConfig(properties));

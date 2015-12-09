@@ -23,16 +23,20 @@ import java.util.Properties;
 @Component
 @Scope("prototype")
 public class HireArtistMessageListener extends Thread {
-    private Logger logger = LoggerFactory.getLogger(HireArtistMessageListener.class);
+
+    public static final String DEFAULT_ZK = "192.168.86.5:2181";
+    public static final String DEFAULT_CONSUMER_NAME = "group_artists";
+    private final String TOPIC = "topic.artists";
+
+    private Logger loggerNotFkingWorking = LoggerFactory.getLogger(HireArtistMessageListener.class);
 
     private ConsumerConnector consumerConnector;
-    private final String TOPIC = "topic_artists";
-    
+
     public HireArtistMessageListener(){
 
         Properties properties = new Properties(){{
-            put("zookeeper.connect","localhost:2181");
-            put("group.id","group_artists");
+            put("zookeeper.connect", DEFAULT_ZK);
+            put("group.id", DEFAULT_CONSUMER_NAME);
         }};
         consumerConnector = Consumer.createJavaConsumerConnector(new ConsumerConfig(properties));
     }
@@ -42,7 +46,7 @@ public class HireArtistMessageListener extends Thread {
     }
 
     public void consume(){
-        logger.info("consuming");
+        loggerNotFkingWorking.info("consuming");
         consumeMessageStreams();
     }
 
@@ -50,12 +54,14 @@ public class HireArtistMessageListener extends Thread {
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>(){{
             put(TOPIC, new Integer(1));
         }};
-        Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumerConnector.createMessageStreams(topicCountMap);
-        logger.info("getting topic stream from {}", TOPIC);
+        Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap =
+                consumerConnector.createMessageStreams(topicCountMap);
+        loggerNotFkingWorking.info("getting topic stream from {}", TOPIC);
         KafkaStream<byte[], byte[]> topicStream =  consumerMap.get(TOPIC).get(0);
         ConsumerIterator<byte[], byte[]> it = topicStream.iterator();
         while(it.hasNext()) {
-            logger.info(new String(it.next().message()));
+            System.out.println(new String(it.next().message()));
+            loggerNotFkingWorking.info(new String(it.next().message()));
         }
     }
 }

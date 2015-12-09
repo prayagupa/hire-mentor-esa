@@ -28,7 +28,7 @@ public class ArtistProducerController {
 
     @RequestMapping(value = "/send", method = RequestMethod.GET)
     public String send(Model model){
-        String xml = "<HireArtist><name>prayagupd</name><date>10/28/2016</date></HireArtist>";
+        String xml = "<HireArtistEvent><name>prayagupd</name><date>10/28/2016</date></HireArtistEvent>";
         artistProducerService.produce(xml);
         model.addAttribute("name", "prayag");
         return "index";

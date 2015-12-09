@@ -22,8 +22,8 @@ $KAFKA/kafka-server-start.sh $KAFKA_CONFIG/server.properties
 
 ```
 --header HireArtistRequestEvent
-<HireArtistRequest>
+<HireArtistEvent>
    <name>prayagupd</name>
    <date>10/28/2016</date>
-</HireArtistRequest>
+</HireArtistEvent>
 ```

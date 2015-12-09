@@ -1,4 +1,4 @@
-package service;
+package service.eventStreaming;
 
 /**
  * Created by prayagupd
@@ -20,10 +20,10 @@ import java.util.HashSet;
 import java.util.ArrayList;
 
 
-public final class EventStream {
+public final class CommandQueryRS {
 
     public static final String EVENTS_DB = "events-db";
-    public static final String EVENTS_STREAM = "EventStream";
+    public static final String EVENTS_STREAM = "CommandQueryRS";
     public static final int SIZE_IN_BYTES = 20 * 971 * 520;
     public static final int MAX_DOCUMENTS = 1000;
     public static final int NO_DOCUMENTS = MAX_DOCUMENTS;
@@ -183,15 +183,15 @@ public final class EventStream {
 
     public boolean bulkInsertVersion2(MongoClient mongo) {
         //1
-        final DBObject doc = new BasicDBObject();
-        doc.put(TIMESTAMP_FIELD, System.currentTimeMillis());
-        doc.put(MESSAGE_TYPE, "download");
-        doc.put(MESSAGE, 12);
-
         DBCollection collection = mongo.getDB(EVENTS_DB).getCollection(EVENTS_STREAM);
         BulkWriteOperation bulk = collection.initializeOrderedBulkOperation();
-        bulk.insert(doc);
-
+        for (int  i = 0; i < MAX_DOCUMENTS; i++) {
+            final DBObject doc = new BasicDBObject();
+            doc.put(TIMESTAMP_FIELD, System.currentTimeMillis());
+            doc.put(MESSAGE_TYPE, "download");
+            doc.put(MESSAGE, 12);
+            bulk.insert(doc);
+        }
         BulkWriteResult result = bulk.execute();
         return result.isAcknowledged();
     }

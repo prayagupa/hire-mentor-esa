@@ -29,6 +29,9 @@ import javax.annotation.PostConstruct;
 @Service
 public class ArtistProducerService {
 
+    public static final String DEFAULT_ZOOK = "192.168.86.5:2181";
+    public static final String DEFAULT_BROKER = "192.168.86.10:9092";
+
     Logger logger = LoggerFactory.getLogger(ArtistProducerService.class);
 
     @Autowired
@@ -40,8 +43,8 @@ public class ArtistProducerService {
         artistRepository = new ArtistRepository();
         ProducerConfig config = new ProducerConfig(new Properties(){{
                 put("serializer.class", "kafka.serializer.StringEncoder");
-                put("zk.connect", "127.0.0.1:2181");
-                put("metadata.broker.list", "localhost:9092");
+                put("zk.connect", DEFAULT_ZOOK);
+                put("metadata.broker.list", DEFAULT_BROKER);
             }});
         producer = new Producer<String, String>(config);
     }
