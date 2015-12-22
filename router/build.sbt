@@ -11,6 +11,8 @@ libraryDependencies ++= Seq(
   cache,
   ws,
   specs2 % Test,
+  "io.spray" %%  "spray-json" % "1.3.2",
+  "org.json" % "json" % "20151123",
   "com.cloudphysics" % "jerkson_2.10" % "0.6.3",
   "net.liftweb" %% "lift-json" % "2.6.2",
   "com.fasterxml.jackson.core" % "jackson-databind" % "2.0.2", //just for fucking java

@@ -1,5 +1,6 @@
 import java.util
 
+import _root_.util.JsonUtilSpec
 import com.fasterxml.jackson.databind.{ObjectWriter, ObjectMapper}
 import domain.MobileAdUser
 import net.liftweb.json.DefaultFormats
@@ -38,13 +39,13 @@ class DomParserSpec extends Specification {
         val objectMapper : ObjectMapper = new ObjectMapper()
         val writer : ObjectWriter = objectMapper.writer()
         val json_ = writer.withDefaultPrettyPrinter().writeValueAsString(message.orders.get(0).lineItems)
-        println(JsonUtil.toJson(message.header))
+        println(JsonUtilSpec.toJson(message.header))
 
       val car = new Car()
       car.brand = "BMW"
       car.doors = 4
 
-      println(JsonUtil.toJson(car))
+      println(JsonUtilSpec.toJson(car))
 
       message.header.size must equalTo(7)
         message.orders.size() must equalTo(2)
