@@ -40,13 +40,13 @@ public class ArtistProducerService {
     private final String topic = "topic.artists";
 
     public ArtistProducerService(){
-        artistRepository = new ArtistRepository();
-        ProducerConfig config = new ProducerConfig(new Properties(){{
-                put("serializer.class", "kafka.serializer.StringEncoder");
-                put("zk.connect", DEFAULT_ZOOK);
-                put("metadata.broker.list", DEFAULT_BROKER);
-            }});
-        producer = new Producer<String, String>(config);
+//        artistRepository = new ArtistRepository();
+//        ProducerConfig config = new ProducerConfig(new Properties(){{
+//                put("serializer.class", "kafka.serializer.StringEncoder");
+//                put("zk.connect", DEFAULT_ZOOK);
+//                put("metadata.broker.list", DEFAULT_BROKER);
+//            }});
+//        producer = new Producer<String, String>(config);
     }
 
     public void produce(String message){
@@ -88,6 +88,6 @@ public class ArtistProducerService {
     @PostConstruct
     public void init(){
         logger.info("initializing ArtistEventListener " + new Date());
-        new ArtistEventListener().start();
+//        new ArtistEventListener().start();
     }
 }

@@ -1,6 +1,9 @@
 package service.util
 
+import java.io.{StringWriter, StringReader}
+
 import com.mongodb.util.JSON
+import org.codehaus.plexus.util.xml.XmlUtil
 import org.json.JSONObject
 import org.json.XML.toJSONObject
 
@@ -30,30 +33,50 @@ object JsonUtil {
 
   def main(args: Array[String]) {
 //    val number = 0001
-    val xml = "<?xml version=\"1.0\" ?>" +
+    var xml = "<?xml version=\"1.0\" ?>" +
       "<data att=\"dreams\">" +
-        "<created>" +
+        "<created>\n\n\n" +
             "<date>" + 28101989 + "</date>" +
         "</created>" +
         "" + "<type>" + "ContainerDownloadEvent" + "</type>" +
-        "" + "<value>" +  1 + "</value>" +
-      "</data>" +
-      "<id>" + 1989 + "</id>" +
-      ""
+        "" + "<value attValue=\"valueAtt\">" +  1 + "</value>" +
+      "</data>"
+
+    val xmlAwesome =
+      """
+        |<root>
+        |<items>
+        |<item>
+        |<name>blah</name>
+        |</item>
+        |<item>
+        |<name>nhlah</name>
+        |</item>
+        |</items>
+        |</root>
+      """.stripMargin.replaceAll(">\\s+<", "><")
+
 
     val json : JSONObject = toJSONObject(xml)
     val newJson = jsonify(json, true)
     val json_ = JSON.parse(newJson.toString)
     // { "data" : { "type" : "ContainerDownloadEvent" , "value" : 28}}
 
-    println(json_)
+    println("json \n" + json_)
     //println(json_)
-
+    val reader = new StringReader(xml.trim());
+    val writer = new StringWriter();
+    val x = XmlUtil.prettyFormat(reader, writer);
+    println(xml.replaceAll(">\\s+<", ""))
 //    val xmlSerializer = new XMLSerializer
 //    val jsonnn = xmlSerializer.read( xml )
 //
 //    println(jsonnn)
 
+//    test
+  }
+
+  def test: Unit = {
     val testXML = "<MyXML><ID>123456789e1234</ID></MyXML>"
     val testJsonObject = org.json.XML.toJSONObject(testXML)
     println(testJsonObject.getJSONObject("MyXML").getString("ID"))

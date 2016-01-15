@@ -1,12 +1,16 @@
 package com.hireartists.controllers;
 
+import com.hireartists.consumer.SmartLifeCycleA;
 import com.hireartists.services.ArtistProducerService;
 import kafka.utils.Json;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.util.Map;
 
 /**
  * Created by prayagupd
@@ -20,8 +24,15 @@ public class ArtistProducerController {
     @Autowired
     ArtistProducerService artistProducerService;
 
+    @Autowired
+    ApplicationContext applicationContext;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(Model model){
+        Map<String, SmartLifeCycleA> beansOfType = applicationContext.getBeansOfType(SmartLifeCycleA.class);
+        beansOfType.forEach((beanName, bean) -> {
+            System.out.println(beanName + " -> " + bean.getClass());
+        });
         model.addAttribute("name", "prayag");
         return "index";
     }

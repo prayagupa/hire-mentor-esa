@@ -10,6 +10,8 @@ Run
 ---------------
 
 ```
+## https://github.com/prayagupd/vagrant-kafka-scala/tree/master/vagrant
+
 $KAFKA/zookeeper-server-start.sh $KAFKA_CONFIG/zookeeper.properties
 
 $KAFKA/kafka-server-start.sh $KAFKA_CONFIG/server.properties

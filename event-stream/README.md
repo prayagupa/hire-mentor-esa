@@ -1,0 +1,6 @@
+Event Stream
+----------------------
+
+```
+./gradlew bootRun
+```

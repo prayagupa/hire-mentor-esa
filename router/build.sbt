@@ -21,7 +21,8 @@ libraryDependencies ++= Seq(
   "org.apache.kafka" % "kafka_2.11" % "0.8.2.2"
     exclude("javax.jms", "jms")
     exclude("com.sun.jdmk", "jmxtools")
-    exclude("com.sun.jmx", "jmxri")
+    exclude("com.sun.jmx", "jmxri"),
+  "org.codehaus.plexus" % "plexus-utils" % "3.0.22"
   //  "org.apache.camel" %% "camel-kafka" % "2.16.0"
 )
 
