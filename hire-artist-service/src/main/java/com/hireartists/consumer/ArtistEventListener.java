@@ -24,12 +24,12 @@ public class ArtistEventListener extends KafkaMessageListener {
     private Logger logger = LoggerFactory.getLogger(ArtistEventListener.class);
 
     public ArtistEventListener() {
-        TOPIC = "topic_artists";
+        TOPIC = "topic.artists";
     }
 
     @Override
     public void onMessage(ConsumerIterator<byte[], byte[]> consumerIterator) {
-        logger.info("Start " + new Date() + "========== consuming ============= {} " + this.getThreadGroup().getName());
+        System.out.println("Start " + new Date() + "========== consuming ============= {} " + this.getThreadGroup().getName());
         while(consumerIterator.hasNext()) {
             System.out.println(new String(consumerIterator.next().message()));
         }

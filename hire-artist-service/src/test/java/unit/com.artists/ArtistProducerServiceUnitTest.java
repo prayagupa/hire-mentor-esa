@@ -6,6 +6,7 @@ import com.hireartists.services.ArtistProducerService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 
 import javax.annotation.Resource;
 
@@ -45,6 +46,7 @@ public class ArtistProducerServiceUnitTest {
     }
 
     @Test
+    @Ignore
     public void groupByTypeShouldReturnAllArtistsGroupedbyArtistType(){
 
         when(artistProducerService.artistRepository.findAll()).thenReturn(Arrays.asList(new Artist("Porcupine Tree", "Band")));

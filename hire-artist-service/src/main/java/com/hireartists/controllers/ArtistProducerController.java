@@ -1,5 +1,6 @@
 package com.hireartists.controllers;
 
+import com.hireartists.consumer.ArtistEventListener;
 import com.hireartists.consumer.SmartLifeCycleA;
 import com.hireartists.services.ArtistProducerService;
 import kafka.utils.Json;
@@ -42,6 +43,18 @@ public class ArtistProducerController {
         String xml = "<HireArtistEvent><name>prayagupd</name><date>10/28/2016</date></HireArtistEvent>";
         artistProducerService.produce(xml);
         model.addAttribute("name", "prayag");
+        return "index";
+    }
+
+    @RequestMapping(value = "/consume", method = RequestMethod.GET)
+    public String consume(Model model){
+        new ArtistEventListener().start();
+        return "index";
+    }
+
+    @RequestMapping(value = "/stop", method = RequestMethod.GET)
+    public String stop(Model model){
+        new ArtistEventListener().stop();
         return "index";
     }
 }

@@ -29,3 +29,9 @@ $KAFKA/kafka-server-start.sh $KAFKA_CONFIG/server.properties
    <date>10/28/2016</date>
 </HireArtistEvent>
 ```
+
+```
+$ /usr/local/kafka_2.10-0.8.2.2/bin/kafka-consumer-offset-checker.sh --zookeeper 127.0.0.1:2181 --group artists_group --topic topic.artists
+Group           Topic                          Pid Offset          logSize         Lag             Owner
+artists_group   topic.artists                  0   14              15              1               none
+```

@@ -22,9 +22,9 @@ public abstract class KafkaMessageListener  extends Thread {
 
     private Logger logger = LoggerFactory.getLogger(KafkaMessageListener.class);
 
-    protected String ARTISTS_GROUP = "artists_group";
-    public static final String DEFAULT_ZOOK_2181 = "192.168.86.5:2181";
-    protected String TOPIC = "topic_artists";
+    protected String ARTISTS_GROUP = "artist_group";
+    public static final String DEFAULT_ZOOK_2181 = "127.0.0.1:2181";
+    protected String TOPIC = "topic.artists";
 
     private ConsumerConnector consumerConnector;
 
@@ -43,7 +43,7 @@ public abstract class KafkaMessageListener  extends Thread {
             put(TOPIC, new Integer(1));
         }};
         Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumerConnector.createMessageStreams(topicCountMap);
-        logger.info("1 getting topic stream from " + TOPIC + " -> " + consumerMap.size() + " -> " + consumerMap.get(TOPIC).size());
+        System.out.println("1 getting topic stream from " + TOPIC + " -> " + consumerMap.size() + " -> " + consumerMap.get(TOPIC).size());
         List<KafkaStream<byte[], byte[]>> kafkaStreamList = consumerMap.get(TOPIC);
         KafkaStream<byte[], byte[]> topicStream =  kafkaStreamList.get(0);
         ConsumerIterator<byte[], byte[]> it = topicStream.iterator();
