@@ -3,7 +3,6 @@ package com.hireartists.controllers;
 import com.hireartists.consumer.ArtistEventListener;
 import com.hireartists.consumer.SmartLifeCycleA;
 import com.hireartists.services.ArtistProducerService;
-import kafka.utils.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;

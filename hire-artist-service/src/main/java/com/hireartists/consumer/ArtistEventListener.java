@@ -1,10 +1,7 @@
 package com.hireartists.consumer;
 
-import kafka.consumer.Consumer;
-import kafka.consumer.ConsumerConfig;
-import kafka.consumer.ConsumerIterator;
-import kafka.consumer.KafkaStream;
-import kafka.javaapi.consumer.ConsumerConnector;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
@@ -28,10 +25,17 @@ public class ArtistEventListener extends KafkaMessageListener {
     }
 
     @Override
-    public void onMessage(ConsumerIterator<byte[], byte[]> consumerIterator) {
+    public void onMessage(ConsumerRecord<String, String> event) {
         System.out.println("Start " + new Date() + "========== consuming ============= {} " + this.getThreadGroup().getName());
-        while(consumerIterator.hasNext()) {
-            System.out.println(new String(consumerIterator.next().message()));
-        }
+//        List<ConsumerRecord<String, String>> rec = events.records(0);
+//        List records = events.records();
+
+//        for (Object event : records) {
+//            try {
+        System.out.println("event -> " + event.offset());
+        System.out.println("event -> " + event.value());
+//            } catch (Exception ex) {
+//                throw new RuntimeException("");
+//            }
     }
 }

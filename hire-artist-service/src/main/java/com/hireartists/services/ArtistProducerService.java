@@ -1,11 +1,8 @@
 package com.hireartists.services;
 
-import com.hireartists.consumer.ArtistEventListener;
-import com.hireartists.consumer.KafkaMessageListener;
 import com.hireartists.domains.Artist;
-import com.hireartists.repository.ArtistRepository;
-import kafka.producer.KeyedMessage;
-import kafka.producer.ProducerConfig;
+import com.hireartists.repository.ArtistRepository;import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +13,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-import kafka.javaapi.producer.Producer;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -36,41 +32,47 @@ public class ArtistProducerService {
 
     @Autowired
     public ArtistRepository artistRepository;
-    private Producer<String, String> producer;
+    private org.apache.kafka.clients.producer.Producer<String, String> producer;
     private final String topic = "topic.artists";
 
-    public ArtistProducerService(){
+    public ArtistProducerService() {
 //        artistRepository = new ArtistRepository();
-        ProducerConfig config = new ProducerConfig(new Properties(){{
-                put("serializer.class", "kafka.serializer.StringEncoder");
-                put("zk.connect", DEFAULT_ZOOK);
-                put("metadata.broker.list", DEFAULT_BROKER);
-            }});
-        producer = new Producer<String, String>(config);
+        Properties config = new Properties() {{
+            put("bootstrap.servers", "localhost:9092");
+            //put("group.id", "artist_group");
+            put("enable.auto.commit", "true");
+            put("auto.commit.interval.ms", "1000");
+            put("session.timeout.ms", "30000");
+            put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+            put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+            put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+            put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+            put("partition.assignment.strategy", "range");
+        }};
+        producer = new KafkaProducer<>(config);
     }
 
-    public void produce(String message){
+    public void produce(String message) {
         //send a message
         System.out.println("producing");
-        KeyedMessage<String, String> kafkaMessage = new KeyedMessage<String, String>(topic,message.toString());
-        producer.send(kafkaMessage);
+        producer.send(new ProducerRecord<String, String>(topic, "", message.toString()));
     }
 
-    public List<Artist> search(String criteria){
+    public List<Artist> search(String criteria) {
         List<Artist> artists = artistRepository.findAll();
         return artists.stream()
                 .filter(artist -> artist.getName().startsWith(criteria))
                 .collect(Collectors.toList());
     }
 
-    public List<Json> convertToJson(String criteria){
+    public List<Json> convertToJson(String criteria) {
         List<Artist> artists = artistRepository.findAll();
         return artists.stream()
                 .map(artist -> new Json("name", artist.getName()))
                 .collect(Collectors.toList());
     }
 
-    public Map<String, List<Artist>> groupListByType(String criteria){
+    public Map<String, List<Artist>> groupListByType(String criteria) {
         List<Artist> artists = artistRepository.findAll();
         return artists.stream()
                 .collect(Collectors.groupingBy(artist -> artist.getType()));
@@ -80,14 +82,14 @@ public class ArtistProducerService {
         private String key;
         private String value;
 
-        public Json(String key, String value){
+        public Json(String key, String value) {
             this.key = key;
             this.value = value;
         }
     }
 
     @PostConstruct
-    public void init(){
+    public void init() {
         logger.info("initializing ArtistEventListener " + new Date());
 //        new ArtistEventListener().start();
     }
