@@ -1,6 +1,7 @@
 package com.hireartists.services;
 
 import com.hireartists.domains.Artist;
+import com.hireartists.driver.EventProducer;
 import com.hireartists.repository.ArtistRepository;import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ import javax.annotation.PostConstruct;
  */
 
 @Service
-public class ArtistProducerService {
+public class ArtistProducerService extends EventProducer {
 
     public static final String DEFAULT_ZOOK = "127.0.0.1:2181";
     public static final String DEFAULT_BROKER = "127.0.0.1:9092";
@@ -32,30 +33,9 @@ public class ArtistProducerService {
 
     @Autowired
     public ArtistRepository artistRepository;
-    private org.apache.kafka.clients.producer.Producer<String, String> producer;
-    private final String topic = "topic.artists";
 
     public ArtistProducerService() {
-//        artistRepository = new ArtistRepository();
-        Properties config = new Properties() {{
-            put("bootstrap.servers", "localhost:9092");
-            //put("group.id", "artist_group");
-            put("enable.auto.commit", "true");
-            put("auto.commit.interval.ms", "1000");
-            put("session.timeout.ms", "30000");
-            put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-            put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-            put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-            put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-            put("partition.assignment.strategy", "range");
-        }};
-        producer = new KafkaProducer<>(config);
-    }
-
-    public void produce(String message) {
-        //send a message
-        System.out.println("producing");
-        producer.send(new ProducerRecord<String, String>(topic, "", message.toString()));
+        super();
     }
 
     public List<Artist> search(String criteria) {
@@ -88,9 +68,4 @@ public class ArtistProducerService {
         }
     }
 
-    @PostConstruct
-    public void init() {
-        logger.info("initializing ArtistEventListener " + new Date());
-//        new ArtistEventListener().start();
-    }
 }

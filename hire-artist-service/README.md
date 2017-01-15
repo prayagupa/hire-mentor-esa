@@ -6,8 +6,8 @@ Hire Artists Engine
 ./gradlew compileJava
 ```
 
-Run
----------------
+start streaming cluster
+-----------------------
 
 ```
 ## https://github.com/prayagupd/vagrant-kafka-scala/tree/master/vagrant
@@ -17,12 +17,20 @@ $KAFKA/zookeeper-server-start.sh $KAFKA_CONFIG/zookeeper.properties
 $KAFKA/kafka-server-start.sh $KAFKA_CONFIG/server.properties
 ```
 
+run application
+---------------
+
 ```
 ./gradlew jettyRun
 ```
 
 
+produce
+-------
+
 ```
+http://localhost:8081/hireartists/send
+
 --header HireArtistRequestEvent
 <HireArtistEvent>
    <name>prayagupd</name>
@@ -30,9 +38,17 @@ $KAFKA/kafka-server-start.sh $KAFKA_CONFIG/server.properties
 </HireArtistEvent>
 ```
 
+
+
+consume
+-------
+
+```
+http://localhost:8081/hireartists/consume
 ```
 
-$ /usr/local/kafka_2.11-0.9.0.1/bin/kafka-topics.sh --list --zookeeper 127.0.0.1:2181
+```
+$ /usr/local/kafka_2.11-0.10.1.1/bin/kafka-topics.sh --list --zookeeper 127.0.0.1:2181
 __consumer_offsets
 topic.artists
 

@@ -1,6 +1,6 @@
 package com.hireartists.controllers;
 
-import com.hireartists.consumer.ArtistEventListener;
+import com.hireartists.consumer.ArtistEventConsumer;
 import com.hireartists.consumer.SmartLifeCycleA;
 import com.hireartists.services.ArtistProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,13 +47,13 @@ public class ArtistProducerController {
 
     @RequestMapping(value = "/consume", method = RequestMethod.GET)
     public String consume(Model model){
-        new ArtistEventListener().start();
-        return "index";
+        new ArtistEventConsumer().start();
+        return "consumer";
     }
 
     @RequestMapping(value = "/stop", method = RequestMethod.GET)
     public String stop(Model model){
-        new ArtistEventListener().stop();
+        new ArtistEventConsumer().stop();
         return "index";
     }
 }

@@ -1,4 +1,4 @@
-package com.hireartists.consumer;
+package com.hireartists.driver;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -7,27 +7,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
-import java.util.Map;
 import java.util.Properties;
-
-import static java.util.Arrays.asList;
 
 /**
  * Created by prayagupd
  * on 11/23/15.
  */
 
-public abstract class KafkaMessageListener  extends Thread {
+public abstract class EventConsumer extends Thread {
 
-    private Logger logger = LoggerFactory.getLogger(KafkaMessageListener.class);
+    private Logger logger = LoggerFactory.getLogger(EventConsumer.class);
 
     protected String ARTISTS_GROUP = "artist_group";
-    public static final String DEFAULT_ZOOK_2181 = "127.0.0.1:2181";
     protected String TOPIC = "topic.artists";
 
     private KafkaConsumer<String, String> consumer;
 
-    KafkaMessageListener(){
+    public EventConsumer(){
         Properties properties = new Properties(){{
             put("bootstrap.servers", "localhost:9092");
             put("group.id", ARTISTS_GROUP);
@@ -43,14 +39,15 @@ public abstract class KafkaMessageListener  extends Thread {
 
     @Override
     public void run() {
-        System.out.println("Before KafkaMessageListener " + this.getThreadGroup().getName());
+
+        System.out.println("=============================================================");
+        System.out.println("Before EventConsumer " + this.getThreadGroup().getName());
+        System.out.println("=============================================================");
 
         while(true) {
             ConsumerRecords<String, String> consumerRecords = consumer.poll(100);
 
-            consumerRecords.forEach(consumerRecord -> {
-                onMessage(consumerRecord);
-            });
+            consumerRecords.forEach(this::onMessage);
         }
     }
 
