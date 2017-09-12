@@ -1,4 +1,4 @@
-package com.hireartists.driver;
+package hireartists.driver;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;

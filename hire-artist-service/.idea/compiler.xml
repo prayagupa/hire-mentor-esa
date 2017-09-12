@@ -18,5 +18,11 @@
         <processorPath useClasspath="true" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="event-stream_main" target="1.8" />
+      <module name="event-stream_test" target="1.8" />
+      <module name="hire-artists-service_main" target="1.8" />
+      <module name="hire-artists-service_test" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

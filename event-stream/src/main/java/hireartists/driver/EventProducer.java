@@ -1,7 +1,6 @@
-package com.hireartists.driver;
+package hireartists.driver;
 
-import com.hireartists.domains.Artist;
-import com.hireartists.repository.ArtistRepository;
+
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
@@ -11,23 +10,17 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 /**
  * Created by prayagupd
  * on 10/31/15.
  */
 
-@Service
 public class EventProducer {
 
     Logger logger = LoggerFactory.getLogger(EventProducer.class);
 
-    @Autowired
-    public ArtistRepository artistRepository;
     private org.apache.kafka.clients.producer.Producer<String, String> producer;
     private final String topic = "topic.artists";
 

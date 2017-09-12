@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/hire-artists-service.iml" filepath="$PROJECT_DIR$/hire-artists-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/hire-artists-service.iml" filepath="$PROJECT_DIR$/.idea/modules/hire-artists-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/hire-artists-service_main.iml" filepath="$PROJECT_DIR$/.idea/modules/hire-artists-service_main.iml" group="hire-artists-service" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/hire-artists-service_test.iml" filepath="$PROJECT_DIR$/.idea/modules/hire-artists-service_test.iml" group="hire-artists-service" />
     </modules>
   </component>
 </project>

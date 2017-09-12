@@ -1,5 +1,5 @@
-Hire Artists Engine
----------------------
+Hire Artists API
+----------------
 
 ```
 ./gradlew idea
