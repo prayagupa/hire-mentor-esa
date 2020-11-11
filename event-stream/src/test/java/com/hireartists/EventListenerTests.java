@@ -1,8 +1,6 @@
 package com.hireartists;
 
-import hireartists.consumer.HireArtistMessageListener;
-import hireartists.consumer.methodHandle.TestMultiListener;
-import hireartists.domain.ArtistHiredEvent;
+import com.hireartists.domain.ArtistHiredEvent;
 import org.junit.Test;
 
 /**

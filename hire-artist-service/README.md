@@ -10,11 +10,18 @@ start streaming cluster
 -----------------------
 
 ```
-## https://github.com/prayagupd/vagrant-kafka-scala/tree/master/vagrant
+export KAFKA=/usr/local/kafka_2.12-2.6.0/
+export KAFKA_CONFIG=/usr/local/kafka_2.12-2.6.0/config/
 
-$KAFKA/zookeeper-server-start.sh $KAFKA_CONFIG/zookeeper.properties
+$KAFKA/bin/zookeeper-server-start.sh $KAFKA_CONFIG/zookeeper.properties
 
-$KAFKA/kafka-server-start.sh $KAFKA_CONFIG/server.properties
+$KAFKA/bin/kafka-server-start.sh $KAFKA_CONFIG/server.properties
+
+## 
+/usr/local/kafka_2.12-2.6.0/bin/kafka-topics.sh --create --topic eventstream --bootstrap-server localhost:9092
+
+/usr/local/kafka_2.12-2.6.0/bin/kafka-console-producer.sh --topic eventstream --bootstrap-server localhost:9092
+/usr/local/kafka_2.12-2.6.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic eventstream --partitions 2
 ```
 
 run application

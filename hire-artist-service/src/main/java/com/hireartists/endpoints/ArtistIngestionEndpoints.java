@@ -1,9 +1,9 @@
 package com.hireartists.endpoints;
 
-import com.eventstream.events.JsonEvent;
-import com.eventstream.producer.EventProducer;
-import lombok.val;
-import org.json.JSONObject;
+//import com.eventstream.events.JsonEvent;
+//import com.eventstream.producer.EventProducer;
+//import lombok.val;
+//import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,18 +21,18 @@ import java.util.Collections;
 @Controller
 public class ArtistIngestionEndpoints {
 
-    @Autowired
-    EventProducer eventProducer;
+//    @Autowired
+//    EventProducer eventProducer;
 
     @RequestMapping(value = "/ingest", method = RequestMethod.GET)
     public String ingest(Model model){
-        String json = "{\"ArtistAdded\" : { \"id\" : \"1\", \"artist\" : \"urayagppd\" }}";
-
-        val jsonEvent = new JsonEvent(json, s -> new JSONObject(s).getJSONObject("ArtistAdded").getString("id"),
-                s -> Collections.singletonList(new JSONObject(s).getJSONObject("ArtistAdded").getString("id")));
-
-        val eventProduced = eventProducer.publish(jsonEvent);
-        model.addAttribute("partition", eventProduced.getPartition());
+//        String json = "{\"ArtistAdded\" : { \"id\" : \"1\", \"artist\" : \"urayagppd\" }}";
+//
+//        val jsonEvent = new JsonEvent(json, s -> new JSONObject(s).getJSONObject("ArtistAdded").getString("id"),
+//                s -> Collections.singletonList(new JSONObject(s).getJSONObject("ArtistAdded").getString("id")));
+//
+//        val eventProduced = eventProducer.publish(jsonEvent);
+//        model.addAttribute("partition", eventProduced.getPartition());
         return "index";
     }
 }

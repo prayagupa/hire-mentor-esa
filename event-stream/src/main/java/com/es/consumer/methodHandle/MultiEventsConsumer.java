@@ -1,8 +1,7 @@
-package hireartists.consumer.methodHandle;
+package com.es.consumer.methodHandle;
 
-import hireartists.consumer.Event;
-import hireartists.consumer.EventListener;
-import hireartists.domain.ArtistHiredEvent;
+import com.es.consumer.Event;
+import com.es.consumer.EventListener;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;

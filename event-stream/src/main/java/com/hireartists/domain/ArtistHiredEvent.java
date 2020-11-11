@@ -1,6 +1,6 @@
-package hireartists.domain;
+package com.hireartists.domain;
 
-import hireartists.consumer.Event;
+import com.es.consumer.Event;
 
 /**
  * Created by prayagupd

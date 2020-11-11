@@ -1,8 +1,6 @@
-package hireartists.consumer;
+package com.es.consumer;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;

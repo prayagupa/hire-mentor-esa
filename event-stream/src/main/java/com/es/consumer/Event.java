@@ -1,4 +1,4 @@
-package hireartists.consumer;
+package com.es.consumer;
 
 /**
  * Created by prayagupd

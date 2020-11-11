@@ -1,13 +1,13 @@
-package hireartists.consumer.methodHandle;
+package com.hireartists;
 
-import hireartists.consumer.Event;
-import hireartists.domain.ArtistHiredEvent;
+import com.es.consumer.methodHandle.MultiEventsConsumer;
+import com.hireartists.domain.ArtistHiredEvent;
 
 /**
  * Created by prayagupd
  * on 1/15/16.
  */
-public class TestMultiListener extends MultiEventsConsumer{
+public class TestMultiListener extends MultiEventsConsumer {
 
     public void handleEvent1(ArtistHiredEvent event) {
         System.out.println("container");

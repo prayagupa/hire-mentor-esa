@@ -1,20 +1,15 @@
-apply plugin: 'maven-publish'
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.springframework.boot' version '2.1.5.RELEASE'
+    id 'maven-publish'
+    id 'com.jfrog.artifactory' version '4.9.7'
+}
+
+apply plugin: 'io.spring.dependency-management'
 
 group = 'eventstream'
 version = '1.0'
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.7.RELEASE")
-    }
-}
-
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'spring-boot'
 
 repositories {
     mavenLocal()
@@ -33,18 +28,27 @@ dependencies {
     testCompile("org.springframework.boot:spring-boot-starter-test")
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.3'
-}
+//task wrapper(type: Wrapper) {
+//    gradleVersion = '2.3'
+//}
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId 'eventstream'
-            artifactId 'event-stream'
-            version '1.0'
+//publishing {
+//    publications {
+//        maven(MavenPublication) {
+//            groupId 'eventstream'
+//            artifactId 'event-stream'
+//            version '1.0'
+//
+//            from components.java
+//        }
+//    }
+//}
 
-            from components.java
-        }
-    }
-}
+//buildscript {
+//    repositories {
+//        mavenCentral()
+//    }
+//    dependencies {
+//        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.7.RELEASE")
+//    }
+//}
