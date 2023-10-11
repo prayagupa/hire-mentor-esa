@@ -11,6 +11,8 @@ start streaming cluster
 
 ```
 ## https://github.com/prayagupd/vagrant-kafka-scala/tree/master/vagrant
+wget https://archive.apache.org/dist/kafka/1.1.0/kafka_2.12-1.1.0.tgz
+sudo chmod -R 777 /usr/local/kafka_2.12-1.1.0/
 
 $KAFKA/zookeeper-server-start.sh $KAFKA_CONFIG/zookeeper.properties
 

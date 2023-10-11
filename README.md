@@ -10,6 +10,10 @@ producer n       |          |      consumer n
 
 ```
 
+```bash
+wget https://archive.apache.org/dist/kafka/1.1.0/kafka_2.12-1.1.0.tgz
+```
+
 References
 --------------
 
