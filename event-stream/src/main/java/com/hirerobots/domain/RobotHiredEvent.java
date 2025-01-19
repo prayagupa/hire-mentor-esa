@@ -1,4 +1,4 @@
-package com.hireartists.domain;
+package com.hirerobots.domain;
 
 import com.es.consumer.Event;
 
@@ -7,6 +7,6 @@ import com.es.consumer.Event;
  * on 1/14/16.
  */
 
-public class ArtistHiredEvent extends Event {
+public class RobotHiredEvent extends Event {
 
 }

@@ -1,7 +1,7 @@
-package com.hireartists;
+package com.hirerobots;
 
 import com.es.consumer.MultiEventListener;
-import com.hireartists.domain.ArtistHiredEvent;
+import com.hirerobots.domain.RobotHiredEvent;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class HireArtistMessageListener extends MultiEventListener {
+public class HireRobotMessageListener extends MultiEventListener {
 
-    public void handleEventType1(ArtistHiredEvent event) {
+    public void handleEventType1(RobotHiredEvent event) {
         System.out.println("saving type1");
     }
 

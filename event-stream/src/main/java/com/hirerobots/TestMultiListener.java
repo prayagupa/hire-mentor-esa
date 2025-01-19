@@ -1,7 +1,7 @@
-package com.hireartists;
+package com.hirerobots;
 
 import com.es.consumer.methodHandle.MultiEventsConsumer;
-import com.hireartists.domain.ArtistHiredEvent;
+import com.hirerobots.domain.RobotHiredEvent;
 
 /**
  * Created by prayagupd
@@ -9,7 +9,7 @@ import com.hireartists.domain.ArtistHiredEvent;
  */
 public class TestMultiListener extends MultiEventsConsumer {
 
-    public void handleEvent1(ArtistHiredEvent event) {
+    public void handleEvent1(RobotHiredEvent event) {
         System.out.println("container");
     }
 
