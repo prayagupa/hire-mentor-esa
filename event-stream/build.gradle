@@ -1,9 +1,8 @@
 plugins {
     id 'java'
     id 'application'
-    id 'org.springframework.boot' version '2.1.5.RELEASE'
+    id 'org.springframework.boot' version '2.5.0'
     id 'maven-publish'
-    id 'com.jfrog.artifactory' version '4.9.7'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -16,39 +15,37 @@ repositories {
     mavenCentral()
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 17
+targetCompatibility = 17
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-thymeleaf"){
+    implementation 'org.apache.kafka:kafka-clients:3.0.0'
+    implementation 'org.apache.kafka:kafka-streams:3.0.0'
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf") {
         exclude module: "logback-classic"
     }
-    compile('org.apache.kafka:kafka_2.10:0.10.1.1')
-    testCompile("junit:junit")
-    testCompile("org.springframework.boot:spring-boot-starter-test")
+    implementation('org.apache.kafka:kafka_2.10:0.10.1.1')
+
+    // SLF4J
+    implementation 'org.slf4j:slf4j-simple:1.7.30'
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
+
+    testImplementation("junit:junit")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
-//task wrapper(type: Wrapper) {
-//    gradleVersion = '2.3'
-//}
+configurations.all {
+    exclude group: 'org.slf4j', module: 'slf4j-simple'
+}
 
-//publishing {
-//    publications {
-//        maven(MavenPublication) {
-//            groupId 'eventstream'
-//            artifactId 'event-stream'
-//            version '1.0'
-//
-//            from components.java
-//        }
-//    }
-//}
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'eventstream'
+            artifactId 'event-stream'
+            version '1.0'
 
-//buildscript {
-//    repositories {
-//        mavenCentral()
-//    }
-//    dependencies {
-//        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.7.RELEASE")
-//    }
-//}
+            from components.java
+        }
+    }
+}
